@@ -1,0 +1,30 @@
+{
+  "parser": "babel-eslint",
+  "plugins": ["prettier"],
+  "extends": ["airbnb", "airbnb/hooks", "prettier"],
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/prop-types": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "no-param-reassign": 0,
+    "prettier/prettier": "error",
+    "no-shadow": 0,
+    "no-underscore-dangle": 0,
+    "no-console": 0,
+    "import/no-cycle": 0
+  },
+  "env": {
+    "browser": true
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./webpack/webpack.config.dev.js"
+      }
+    }
+  },
+  "globals": {
+    "config": true
+  }
+}

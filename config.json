@@ -1,0 +1,231 @@
+{
+  "meta": {
+    "description": "CultureMix CMS",
+    "viewport": "width=device-width, initial-scale=1",
+    "robots": "noindex,nofollow"
+  },
+  "api": {
+    "base": "https://tsb-kulturb-api.herokuapp.com/api/v2",
+    "files": "https://tsb-kulturb-api.herokuapp.com/api/v2/files",
+    "user": {
+      "base": "https://tsb-kulturb-api.herokuapp.com/api/v2/users",
+      "login": "/login",
+      "refreshToken": "/refreshToken",
+      "confirmEmail": "/confirm-email",
+      "requestPasswordReset": "/reset-password",
+      "changePassword": "/change-password",
+      "resendConfirmationEmail": "/resend-confirmation-email"
+    }
+  },
+  "map": {
+    "tilelayer": "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png"
+  },
+  "routes": [
+    {
+      "name": "Veranstaltungen",
+      "description": "Veranstaltungen können nur angelegt werden, wenn in der Datenbank der dazugehörige Veranstaltungsort hinterlegt ist.",
+      "endpoint": "/events",
+      "icon": "calendar",
+      "searchable": true,
+      "createable": true,
+      "list": {
+        "columns": [
+          {
+            "label": "Titel",
+            "path": "general.title"
+          },
+          {
+            "label": "Highlight",
+            "path": "general.isHighlight"
+          },
+          {
+            "label": "Ort",
+            "path": "dates[0].venue.general.name",
+            "sortKey": "dates.venue"
+          },
+          {
+            "label": "Datum",
+            "path": "dates[0].date.from",
+            "sortKey": "dates.date.from",
+            "dataType": "date"
+          }
+        ]
+      },
+      "params": {
+        "fields": [
+          "general.title",
+          "general.isHighlight",
+          "dates.venue",
+          "dates.date.from"
+        ],
+        "pastdates": "true"
+      }
+    },
+    {
+      "name": "Veranstaltungsorte",
+      "description": "Veranstaltungsorte können nur angelegt werden, wenn in der Datenbank die dazugehörige Institution / Freie Szene hinterlegt ist. Da ein Veranstaltungsort manuell vom Admin bestätigt werden muss, kann die Freischaltung bis zu 24 Stunden dauern. Wir bitten um Verständnis.",
+      "icon": "bank",
+      "endpoint": "/venues",
+      "searchable": true,
+      "createable": true,
+      "list": {
+        "columns": [
+          {
+            "label": "Name",
+            "path": "general.name"
+          },
+          {
+            "label": "Straße",
+            "path": "address.street"
+          },
+          {
+            "label": "Hausnummer",
+            "path": "address.number"
+          }
+        ]
+      },
+      "params": {
+        "fields": ["general.name", "address.street", "address.number"]
+      }
+    },
+    {
+      "name": "Institutionen / Freie Szene",
+      "description": "Da eine Institutionen / Freie Szene manuell vom Admin bestätigt werden muss, kann die Freischaltung bis zu 24 Stunden dauern. Wir bitten um Verständnis.",
+      "endpoint": "/institutions",
+      "icon": "building-o",
+      "searchable": true,
+      "createable": true,
+      "list": {
+        "columns": [
+          {
+            "label": "Name",
+            "path": "general.name"
+          },
+          {
+            "label": "Beschreibung",
+            "path": "general.description"
+          }
+        ]
+      },
+      "params": {
+        "fields": ["general.name", "general.description"]
+      }
+    },
+    {
+      "name": "Tags",
+      "description": "Admin-Bereich",
+      "icon": "tag",
+      "endpoint": "/tags",
+      "roles": ["ADMIN"],
+      "searchable": true,
+      "createable": true,
+      "list": {
+        "columns": [
+          {
+            "label": "Name",
+            "path": "name"
+          },
+          {
+            "label": "Parent",
+            "path": "parent.name",
+            "sortKey": "parent"
+          }
+        ]
+      },
+      "params": {
+        "fields": ["name", "parent"]
+      }
+    },
+    {
+      "name": "Kategorien",
+      "description": "Admin-Bereich",
+      "icon": "task",
+      "endpoint": "/categories",
+      "roles": ["ADMIN"],
+      "searchable": true,
+      "createable": true,
+      "list": {
+        "columns": [
+          {
+            "label": "Name",
+            "path": "name"
+          }
+        ]
+      },
+      "params": {
+        "fields": ["name"]
+      }
+    },
+    {
+      "name": "Korrekturen",
+      "description": "Admin-Bereich",
+      "endpoint": "/changes",
+      "icon": "import",
+      "roles": ["ADMIN"],
+      "authenticate": true,
+      "editComponent": "ChangeView",
+      "searchable": false,
+      "createable": false,
+      "list": {
+        "columns": [
+          {
+            "label": "Nutzer",
+            "path": "meta.user.email"
+          },
+          {
+            "label": "Institution",
+            "path": "meta.user.meta.institutionName"
+          },
+          {
+            "label": "Datum",
+            "path": "createdAt",
+            "dataType": "date"
+          },
+          {
+            "label": "Typ",
+            "path": "meta.type"
+          },
+          {
+            "label": "neu erstellt",
+            "path": "meta.create"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Nutzer",
+      "description": "Admin-Bereich",
+      "endpoint": "/users",
+      "icon": "people-group",
+      "roles": ["ADMIN"],
+      "authenticate": true,
+      "editComponent": "UserEdit",
+      "createRoute": "signup",
+      "searchable": true,
+      "createable": true,
+      "list": {
+        "columns": [
+          {
+            "label": "E-Mail",
+            "path": "email"
+          },
+          {
+            "label": "Verifiziert",
+            "path": "verified"
+          },
+          {
+            "label": "Gesperrt",
+            "path": "blocked"
+          },
+          {
+            "label": "Institution",
+            "path": "meta.institutionName"
+          }
+        ]
+      },
+      "params": {
+        "fields": ["email", "verified", "blocked", "meta.institutionName"]
+      }
+    }
+  ]
+}
